@@ -32,12 +32,19 @@ class Module:
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self.training = True
+        # Unsure if this is how you access / change child modules?
+        for child in self.modules():
+            child.training = True
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self.training = False
+        # Unsure if this is how you access / change child modules?
+        for child in self.modules():
+            child.training = False
+
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
@@ -48,12 +55,23 @@ class Module:
             The name and `Parameter` of each ancestor parameter.
         """
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        # Problem: this is only getting the parameters from the current module.
+        # We want the parameters from all the descendents of these modules too.
+        # I think the solution might look recursive?
+        p: Dict[str, Parameter] = self.__dict__["_parameters"]
+        ls = list(zip(p.keys(), p.values()))
+        # For each descendent module, find the named parameters of these modules, add them to the list
+        for mod in self.modules():
+            ls1 = mod.named_parameters()
+            ls += ls1
+        return ls
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        ls = self.named_parameters()
+        for x in ls:
+            print(x)
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """
