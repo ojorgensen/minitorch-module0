@@ -8,3 +8,6 @@
 
 
 Note: to begin, just need to go to where the venv is and do source venv/bin/activate
+
+
+Finished Module 0! 
