@@ -60,18 +60,37 @@ class Module:
         # I think the solution might look recursive?
         p: Dict[str, Parameter] = self.__dict__["_parameters"]
         ls = list(zip(p.keys(), p.values()))
-        # For each descendent module, find the named parameters of these modules, add them to the list
-        for mod in self.modules():
-            ls1 = mod.named_parameters()
+
+
+
+        m: Dict[str, Module] = self.__dict__["_modules"]
+
+        #print("m is " + str(m))
+
+        #print(" list m is " + str(list(zip(m.keys(), m.values()))))
+
+        zipped_m = list(zip(m.keys(), m.values()))
+
+        for (mod_key, mod_value) in zipped_m:
+            ls1 = [(mod_key + "." + mod[0], mod[1]) for mod in mod_value.named_parameters()]
             ls += ls1
         return ls
+
+        # print( self.__dict__["_modules"] )
+        # #return self.__dict__["_modules"]
+
+        # # For each descendent module, find the named parameters of these modules, add them to the list
+        # # Not only add them, add them with the prefix describing the modules they came from!
+        # for mod in self.__dict__["_modules"].:
+        #     ls1 = [(str(mod) + "." + x[0], x[1]) for x in mod.named_parameters()]
+        #     s += ls1
+        # return ls
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
         # TODO: Implement for Task 0.4.
-        ls = self.named_parameters()
-        for x in ls:
-            print(x)
+        ls = [y for (x,y) in self.named_parameters()]
+        return ls
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """
